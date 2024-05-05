@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { TransactionModule } from './transaction/transaction.module';
+import { RouterModule } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { TransactionModule } from './transaction/transaction.module';
       autoLoadEntities: true,
     }),
     TransactionModule,
+    RouterModule.register([{ path: 'api', module: TransactionModule }]),
   ],
   controllers: [],
   providers: [],
