@@ -4,12 +4,15 @@ import { Transaction } from '../entities/transaction.entitiy';
 import { Repository } from 'typeorm';
 import { Operation } from '../../shared/enums/operation.enum';
 import { UpdateTransactionRequest } from '../controllers/dto/request/update-transaction.request';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { TransactionSavedEvent } from '../events/transaction-saved.event';
 
 @Injectable()
 export class TransactionService {
   constructor(
     @InjectRepository(Transaction)
     private transactionRepository: Repository<Transaction>,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   findAll() {
@@ -22,7 +25,12 @@ export class TransactionService {
     transaction.amount = 0;
     transaction.operation = Operation.PLUS;
 
-    return await this.transactionRepository.save(transaction);
+    const createdTransaction =
+      await this.transactionRepository.save(transaction);
+
+    this.eventEmitter.emit('transaction.saved', new TransactionSavedEvent());
+
+    return createdTransaction;
   }
 
   async deleteById(id: number) {
@@ -49,5 +57,7 @@ export class TransactionService {
     }
 
     await this.transactionRepository.save(transaction);
+
+    this.eventEmitter.emit('transaction.saved', new TransactionSavedEvent());
   }
 }
