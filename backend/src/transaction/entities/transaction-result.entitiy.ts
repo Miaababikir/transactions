@@ -5,7 +5,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Operation } from '../../shared/enums/operation.enum';
 
 @Entity()
 export class TransactionResult {
