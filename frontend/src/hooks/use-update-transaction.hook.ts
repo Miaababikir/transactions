@@ -4,6 +4,7 @@ import { FIND_ALL_TRANSACTIONS_QUERY_KEY } from '@/hooks/use-get-transactions.ho
 import { Operation } from '@/shared/enums/operation.enum.ts';
 
 interface UpdateTransactionDto {
+  id: number;
   amount?: number;
   operation?: Operation;
   disabled?: boolean;

@@ -18,7 +18,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { Form, FormField } from '@/components/ui/form.tsx';
 import { useEffect } from 'react';
 import _debounce from 'lodash/debounce';
-import { Skeleton } from '@/components/ui/skeleton.tsx';
 import Loading from '@/pages/transactions/components/loading.tsx';
 
 interface Props {
@@ -40,9 +39,10 @@ const FormItem = ({ transaction }: Props) => {
   };
 
   useEffect(() => {
-    const subscription = form.watch(
-      form.handleSubmit((data) => handleFormChange(data)),
+    const subscription = form.watch(() =>
+      form.handleSubmit(handleFormChange)(),
     );
+
     return () => subscription.unsubscribe();
   }, [form.handleSubmit, form.watch]);
 
@@ -94,7 +94,7 @@ const FormItem = ({ transaction }: Props) => {
                 <Checkbox
                   id={`disabled.${transaction.id}`}
                   onCheckedChange={field.onChange}
-                  defaultValue={transaction.disabled}
+                  defaultValue={+transaction.disabled}
                   checked={field.value}
                 />
                 <label
@@ -110,6 +110,7 @@ const FormItem = ({ transaction }: Props) => {
           <Button
             className='ml-4'
             size='icon'
+            variant='secondary'
             onClick={() => onDeleteTransaction(transaction.id)}
           >
             <Trash height={15} />
